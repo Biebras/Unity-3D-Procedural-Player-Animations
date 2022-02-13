@@ -34,16 +34,33 @@ public class PlayerCollision : MonoBehaviour
     {
         UpdatePlayerSidePositions();
 
-        HandlePlayerCollision(nextPos, ref move);
-        HandleLifterCollision(nextPos, ref move);
+        HandleBumperCollider(nextPos, ref move);
+        HandleGroundCollider(nextPos, ref move);
     }
 
-    private void HandlePlayerCollision(Vector3 nextPos, ref Vector3 move)
+    private void HandleBumperCollider(Vector3 nextPos, ref Vector3 move)
     {
-        
+        var player = _playerSides;
+        var checkPos = BumperCollider.GetPos(nextPos);
+
+        var colliders = Physics.OverlapSphere(checkPos, BumperCollider.radius, _obstacleMask);
+
+        if (colliders.Length == 0)
+            return;
+
+        var direction = GetXAndZDirection(move);
+        var offsetPlayer =  - (player.RightPos.x - player.Center.x);
+        var hitPoint = colliders[0].ClosestPointOnBounds(player.Center);
+
+        hitPoint.x += BumperCollider.radius;
+
+        var pos = _transform.position;
+        pos.x = hitPoint.x;
+        _transform.position = pos;
+        //var gap = hitPoint - nextPos;
     }
 
-    private void HandleLifterCollision(Vector3 nextPos, ref Vector3 move)
+    private void HandleGroundCollider(Vector3 nextPos, ref Vector3 move)
     {
         var player = _playerSides;
         var checkPos = GroundCollider.GetPos(nextPos);
@@ -79,6 +96,14 @@ public class PlayerCollision : MonoBehaviour
         _playerSides.ForwardPos = new Vector3(_bounds.center.x, _bounds.center.y, _bounds.max.z);
         _playerSides.BackPos = new Vector3(_bounds.center.x, _bounds.center.y, _bounds.min.z);
         _playerSides.Center = _bounds.center;
+    }
+
+    private Vector3 GetXAndZDirection(Vector3 movement)
+    {
+        var xDirection = movement.z == 0 ? 0 : movement.z > 0 ? 1 : 0;
+        var zDirection = movement.z == 0 ? 0 : movement.z > 0 ? 1 : 0;
+
+        return new Vector3(xDirection, 0, zDirection);
     }
 
     private void UpdateBounds()
