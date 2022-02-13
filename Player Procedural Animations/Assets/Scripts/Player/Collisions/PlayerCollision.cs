@@ -54,16 +54,13 @@ public class PlayerCollision : MonoBehaviour
         var dir = (hitPoint - _playerSides.Center).normalized;
         RaycastHit raycastHit;
         Physics.Raycast(_playerSides.Center, dir, out raycastHit, bumperRayLength, _obstacleMask);
+        Debug.DrawRay(_playerSides.Center, dir * raycastHit.distance, Color.red, 1);
 
-        hitPoint += BumperCollider.radius * raycastHit.normal;
-        var wallAxis = Vector3.zero;
-        wallAxis.x = raycastHit.normal.x * raycastHit.normal.x;
-        wallAxis.z = raycastHit.normal.z * raycastHit.normal.z;
-
+        var dis = raycastHit.point - player.Center;
+        hitPoint -= dis;
+        print(hitPoint);
         var gap = hitPoint - nextPos;
         gap.y = 0;
-        gap.x *= wallAxis.x;
-        gap.z *= wallAxis.z;
 
         move += gap;
     }
