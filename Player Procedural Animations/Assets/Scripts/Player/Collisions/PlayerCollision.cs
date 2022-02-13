@@ -15,6 +15,8 @@ public class PlayerCollision : MonoBehaviour
 {
     public CollisionInfo BumperCollider;
     public CollisionInfo GroundCollider;
+    [SerializeField] private float bumperRayLength = 10;
+    [SerializeField] private float groundRayLength = 10;
     [SerializeField] private LayerMask _obstacleMask;
 
     private PlayerSides _playerSides;
@@ -48,16 +50,22 @@ public class PlayerCollision : MonoBehaviour
         if (colliders.Length == 0)
             return;
 
-        var direction = GetXAndZDirection(move);
-        var offsetPlayer =  - (player.RightPos.x - player.Center.x);
         var hitPoint = colliders[0].ClosestPointOnBounds(player.Center);
+        var dir = (hitPoint - _playerSides.Center).normalized;
+        RaycastHit raycastHit;
+        Physics.Raycast(_playerSides.Center, dir, out raycastHit, bumperRayLength, _obstacleMask);
 
-        hitPoint.x += BumperCollider.radius;
+        hitPoint += BumperCollider.radius * raycastHit.normal;
+        var wallAxis = Vector3.zero;
+        wallAxis.x = raycastHit.normal.x * raycastHit.normal.x;
+        wallAxis.z = raycastHit.normal.z * raycastHit.normal.z;
 
-        var pos = _transform.position;
-        pos.x = hitPoint.x;
-        _transform.position = pos;
-        //var gap = hitPoint - nextPos;
+        var gap = hitPoint - nextPos;
+        gap.y = 0;
+        gap.x *= wallAxis.x;
+        gap.z *= wallAxis.z;
+
+        move += gap;
     }
 
     private void HandleGroundCollider(Vector3 nextPos, ref Vector3 move)
@@ -80,7 +88,14 @@ public class PlayerCollision : MonoBehaviour
                 highestPoint = closestHitPoint;
         }
 
-        var gap = highestPoint - nextPos;
+        var dir = (highestPoint - _playerSides.TopPos).normalized;
+        RaycastHit raycastHit;
+        var hit = Physics.Raycast(_playerSides.TopPos, dir, out raycastHit, groundRayLength, _obstacleMask);
+
+        if (!hit)
+            return;
+
+        var gap = raycastHit.point - nextPos;
 
         move.y += gap.y;
     }

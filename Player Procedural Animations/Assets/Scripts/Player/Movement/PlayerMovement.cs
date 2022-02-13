@@ -22,12 +22,14 @@ public class PlayerMovement : MonoBehaviour
     private Transform _transform;
     private PlayerCollision _playerCollision;
     private PlayerInput _playerInput;
+    private Rigidbody rb;
 
     private void Awake()
     {
         _transform = transform;
         _playerCollision = GetComponent<PlayerCollision>();
         _playerInput = GetComponent<PlayerInput>();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Start()
