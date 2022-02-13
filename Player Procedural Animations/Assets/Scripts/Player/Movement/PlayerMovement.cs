@@ -105,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
         var move = _rawMovement * Time.deltaTime;
         _nextPos = pos + move;
 
-        _playerCollision.HandleCollisions(_nextPos, ref move);
+        //_playerCollision.HandleCollisions(_nextPos, ref move);
 
         _transform.position += move;
     }

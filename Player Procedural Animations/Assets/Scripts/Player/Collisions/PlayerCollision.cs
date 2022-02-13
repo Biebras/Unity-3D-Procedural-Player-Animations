@@ -37,9 +37,10 @@ public class PlayerCollision : MonoBehaviour
         UpdatePlayerSidePositions();
 
         HandleBumperCollider(nextPos, ref move);
-        HandleGroundCollider(nextPos, ref move);
+        //HandleGroundCollider(nextPos, ref move);
     }
 
+    /*
     private void HandleBumperCollider(Vector3 nextPos, ref Vector3 move)
     {
         var player = _playerSides;
@@ -63,6 +64,38 @@ public class PlayerCollision : MonoBehaviour
         gap.y = 0;
 
         move += gap;
+    }*/
+
+    private void HandleBumperCollider(Vector3 nextPos, ref Vector3 move)
+    {
+        var player = _playerSides;
+        //var currentPos = BumperCollider.GetPos(player.BotPos);
+        //var checkPos = BumperCollider.GetPos(nextPos);
+
+        var dir = (nextPos - _transform.position).normalized;
+        RaycastHit raycast;
+        var hit = Physics.SphereCast(_transform.position, BumperCollider.radius - 0.1f, dir, out raycast, 2f, _obstacleMask);
+
+        if (!hit)
+            return;
+
+        var overlap = Physics.OverlapSphere(nextPos, BumperCollider.radius, _obstacleMask);
+
+        if (overlap.Length == 0)
+            return;
+
+        Debug.DrawRay(_transform.position, dir, Color.red, 1);
+
+        var normals = raycast.normal;
+        var reposition = raycast.point;
+        reposition.z -= BumperCollider.radius;
+        var gap = reposition - _transform.position;
+        print(normals);
+        //gap.x *= Mathf.Abs(normals.x;)
+        //gap.z *= normals.z;
+
+        move += gap;
+
     }
 
     private void HandleGroundCollider(Vector3 nextPos, ref Vector3 move)
@@ -130,5 +163,9 @@ public class PlayerCollision : MonoBehaviour
 
         Gizmos.color = GroundCollider.gizmosColor;
         Gizmos.DrawWireSphere(GroundCollider.GetPos(transform.position), GroundCollider.radius);
+
+        var currentPos = BumperCollider.GetPos(_playerSides.BotPos);
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(currentPos, BumperCollider.radius - 0.1f);
     }
 }

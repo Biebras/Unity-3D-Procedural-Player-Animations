@@ -12,11 +12,11 @@ public class PlayerInput : MonoBehaviour
         _inputActions.Player.Enable();
     }
 
-    public Vector2 GetMovementInput()
+    public Vector3 GetMovementInput()
     {
         float backForward = _inputActions.Player.BackForward.ReadValue<float>();
         float leftRight = _inputActions.Player.LeftRight.ReadValue<float>();
 
-        return new Vector2(leftRight, backForward).normalized;
+        return new Vector3(leftRight, 0, backForward).normalized;
     }
 }

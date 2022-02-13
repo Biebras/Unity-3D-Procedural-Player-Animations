@@ -8,12 +8,12 @@ public class PlayerVisualization : MonoBehaviour
     [SerializeField] private float _rotationOffset = 90;
 
     private Transform _transform;
-    private PlayerMovement _playerMovement;
+    private KinematicBody _kinematicBody;
 
     private void Awake()
     {
         _transform = transform;
-        _playerMovement = GetComponent<PlayerMovement>();
+        _kinematicBody = GetComponent<KinematicBody>();
     }
 
     private void Update()
@@ -23,7 +23,7 @@ public class PlayerVisualization : MonoBehaviour
 
     private void HandleRotation()
     {
-        var velocity = _playerMovement.GetVelocity().normalized;
+        var velocity = _kinematicBody.velocity.normalized;
 
         if (velocity.magnitude == 0)
             return;
