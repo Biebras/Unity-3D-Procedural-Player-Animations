@@ -1,91 +1,96 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// This code was made by marmitoTH.
+/// The code can be accessed: https://github.com/marmitoTH/Unity-Kinematic-Body
+/// </summary>
+
 public class KinematicBody : MonoBehaviour
 {
 	public float slopeLimit = 45f;
 	public float stepOffset = 0.3f;
 	public float skinWidth = 0.08f;
 
-	[SerializeField] private Vector3 m_center = Vector3.zero;
-	[SerializeField] private float m_radius = 0.5f;
-	[SerializeField] private float m_height = 2f;
+	[SerializeField] private Vector3 _center = Vector3.zero;
+	[SerializeField] private float _radius = 0.5f;
+	[SerializeField] private float _height = 2f;
 
-	private Vector3 m_position;
-	private Vector3 m_upDirection;
+	private Vector3 _position;
+	private Vector3 _upDirection;
 
-	private Rigidbody m_rigidbody;
-	private CapsuleCollider m_collider;
+	private Rigidbody _rigidbody;
+	private CapsuleCollider _collider;
 
-	private readonly Collider[] m_overlaps = new Collider[5];
-	private readonly List<RaycastHit> m_contacts = new List<RaycastHit>();
+	private readonly Collider[] _overlaps = new Collider[5];
+	private readonly List<RaycastHit> _contacts = new List<RaycastHit>();
 
 	private const int MaxSweepSteps = 5;
 	private const float MinMoveDistance = 0f;
 	private const float MinCeilingAngle = 145;
 
-	public Vector3 velocity { get; set; }
-	public bool isGrounded { get; private set; }
+	public Vector3 Velocity { get; set; }
+	public bool IsGrounded { get; private set; }
 
-	public Vector3 center
+	public Vector3 Center
 	{
-		get { return m_center; }
+		get { return _center; }
 		set
 		{
-			m_center = value;
-			collider.center = value;
+			_center = value;
+			Collider.center = value;
 		}
 	}
 
-	public float radius
+	public float Radius
 	{
-		get { return m_radius; }
+		get { return _radius; }
 		set
 		{
-			m_radius = value;
-			collider.radius = value;
+			_radius = value;
+			Collider.radius = value;
 		}
 	}
 
-	public float height
+	public float Height
 	{
-		get { return m_height; }
+		get { return _height; }
 		set
 		{
-			m_height = value;
-			collider.height = value;
+			_height = value;
+			Collider.height = value;
 		}
 	}
 
-	public new Rigidbody rigidbody
+	public Rigidbody Rigidbody
 	{
 		get
 		{
-			if (!m_rigidbody)
+			if (!_rigidbody)
 			{
-				if (!TryGetComponent(out m_rigidbody))
+				if (!TryGetComponent(out _rigidbody))
 				{
-					m_rigidbody = gameObject.AddComponent<Rigidbody>();
+					_rigidbody = gameObject.AddComponent<Rigidbody>();
 				}
 			}
 
-			return m_rigidbody;
+			return _rigidbody;
 		}
 	}
 
-	public new CapsuleCollider collider
+	public CapsuleCollider Collider
 	{
 		get
 		{
-			if (!m_collider)
+			if (!_collider)
 			{
-				if (!TryGetComponent(out m_collider))
+				if (!TryGetComponent(out _collider))
 				{
-					m_collider = gameObject.AddComponent<CapsuleCollider>();
+					_collider = gameObject.AddComponent<CapsuleCollider>();
 				}
 			}
 
-			return m_collider;
+			return _collider;
 		}
 	}
 
@@ -97,15 +102,15 @@ public class KinematicBody : MonoBehaviour
 
 	private void InitializeRigidbody()
 	{
-		rigidbody.isKinematic = true;
-		rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+		Rigidbody.isKinematic = true;
+		Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 	}
 
 	private void InitializeCollider()
 	{
-		collider.center = m_center;
-		collider.height = m_height;
-		collider.radius = m_radius;
+		Collider.center = _center;
+		Collider.height = _height;
+		Collider.radius = _radius;
 	}
 
 	public void Move(Vector3 motion)
@@ -120,32 +125,32 @@ public class KinematicBody : MonoBehaviour
 
 	public void Rotate(Quaternion rotation)
 	{
-		rigidbody.MoveRotation(rotation);
+		Rigidbody.MoveRotation(rotation);
 	}
 
 	private void GetState(Vector3 motion)
 	{
-		m_position = rigidbody.position;
-		m_upDirection = transform.up;
-		velocity = motion;
+		_position = Rigidbody.position;
+		_upDirection = transform.up;
+		Velocity = motion;
 	}
 
 	private void SetState()
 	{
-		rigidbody.MovePosition(m_position);
+		Rigidbody.MovePosition(_position);
 	}
 
 	private void ClearVariables()
 	{
-		m_contacts.Clear();
-		isGrounded = false;
+		_contacts.Clear();
+		IsGrounded = false;
 	}
 
 	private void HandleCollision()
 	{
-		if (velocity.sqrMagnitude > MinMoveDistance)
+		if (Velocity.sqrMagnitude > MinMoveDistance)
 		{
-			Vector3 localVelocity = transform.InverseTransformDirection(velocity) * Time.deltaTime;
+			Vector3 localVelocity = transform.InverseTransformDirection(Velocity) * Time.deltaTime;
 			Vector3 lateralVelocity = new Vector3(localVelocity.x, 0, localVelocity.z);
 			Vector3 verticalVelocity = new Vector3(0, localVelocity.y, 0);
 
@@ -159,20 +164,20 @@ public class KinematicBody : MonoBehaviour
 
 	private void HandleContacts()
 	{
-		if (m_contacts.Count > 0)
+		if (_contacts.Count > 0)
 		{
 			float angle;
 
-			foreach (RaycastHit contact in m_contacts)
+			foreach (RaycastHit contact in _contacts)
 			{
-				angle = Vector3.Angle(m_upDirection, contact.normal);
+				angle = Vector3.Angle(_upDirection, contact.normal);
 
 				if (angle <= slopeLimit)
 				{
-					isGrounded = true;
+					IsGrounded = true;
 				}
 
-				velocity -= Vector3.Project(velocity, contact.normal);
+				Velocity -= Vector3.Project(Velocity, contact.normal);
 			}
 		}
 	}
@@ -184,20 +189,20 @@ public class KinematicBody : MonoBehaviour
 		float safeDistance;
 		float slideAngle;
 
-		float capsuleOffset = m_height * 0.5f - m_radius;
+		float capsuleOffset = _height * 0.5f - _radius;
 
 		for (int i = 0; i < MaxSweepSteps; i++)
 		{
-			origin = m_position + m_center - direction * m_radius;
-			bottom = origin - m_upDirection * (capsuleOffset - stepOffset);
-			top = origin + m_upDirection * capsuleOffset;
+			origin = _position + _center - direction * _radius;
+			bottom = origin - _upDirection * (capsuleOffset - stepOffset);
+			top = origin + _upDirection * capsuleOffset;
 
-			if (Physics.CapsuleCast(top, bottom, m_radius, direction, out hitInfo, distance + m_radius))
+			if (Physics.CapsuleCast(top, bottom, _radius, direction, out hitInfo, distance + _radius))
 			{
-				slideAngle = Vector3.Angle(m_upDirection, hitInfo.normal);
-				safeDistance = hitInfo.distance - m_radius - skinWidth;
-				m_position += direction * safeDistance;
-				m_contacts.Add(hitInfo);
+				slideAngle = Vector3.Angle(_upDirection, hitInfo.normal);
+				safeDistance = hitInfo.distance - _radius - skinWidth;
+				_position += direction * safeDistance;
+				_contacts.Add(hitInfo);
 
 				if ((slideAngle >= minSlideAngle) && (slideAngle <= maxSlideAngle))
 				{
@@ -209,7 +214,7 @@ public class KinematicBody : MonoBehaviour
 			}
 			else
 			{
-				m_position += direction * distance;
+				_position += direction * distance;
 				break;
 			}
 		}
@@ -217,20 +222,20 @@ public class KinematicBody : MonoBehaviour
 
 	private void Depenetrate()
 	{
-		float capsuleOffset = m_height * 0.5f - m_radius;
-		Vector3 top = m_position + m_upDirection * capsuleOffset;
-		Vector3 bottom = m_position - m_upDirection * capsuleOffset;
-		int overlapsNum = Physics.OverlapCapsuleNonAlloc(top, bottom, collider.radius, m_overlaps);
+		float capsuleOffset = _height * 0.5f - _radius;
+		Vector3 top = _position + _upDirection * capsuleOffset;
+		Vector3 bottom = _position - _upDirection * capsuleOffset;
+		int overlapsNum = Physics.OverlapCapsuleNonAlloc(top, bottom, Collider.radius, _overlaps);
 
 		if (overlapsNum > 0)
 		{
 			for (int i = 0; i < overlapsNum; i++)
 			{
-				if ((m_overlaps[i].transform != transform) && Physics.ComputePenetration(collider, m_position, transform.rotation, 
-					m_overlaps[i], m_overlaps[i].transform.position, m_overlaps[i].transform.rotation, out Vector3 direction, out float distance))
+				if ((_overlaps[i].transform != transform) && Physics.ComputePenetration(Collider, _position, transform.rotation, 
+					_overlaps[i], _overlaps[i].transform.position, _overlaps[i].transform.rotation, out Vector3 direction, out float distance))
 				{
-					m_position += direction * (distance + skinWidth);
-					velocity -= Vector3.Project(velocity, -direction);
+					_position += direction * (distance + skinWidth);
+					Velocity -= Vector3.Project(Velocity, -direction);
 				}
 			}
 		}
