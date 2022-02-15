@@ -15,9 +15,11 @@ public class KinematicBody : MonoBehaviour
 	[SerializeField] private Vector3 _center = Vector3.zero;
 	[SerializeField] private float _radius = 0.5f;
 	[SerializeField] private float _height = 2f;
+	[SerializeField] private float smoothAcceleration = 4;
 
 	private Vector3 _position;
 	private Vector3 _upDirection;
+	private Vector3 _lastVelocity;
 
 	private Rigidbody _rigidbody;
 	private CapsuleCollider _collider;
@@ -29,7 +31,8 @@ public class KinematicBody : MonoBehaviour
 	private const float MinMoveDistance = 0f;
 	private const float MinCeilingAngle = 145;
 
-	public Vector3 Velocity { get; set; }
+	public Vector3 Velocity { get; private set; }
+	public Vector3 Acceleration { get; private set; }
 	public bool IsGrounded { get; private set; }
 
 	public Vector3 Center
@@ -121,6 +124,9 @@ public class KinematicBody : MonoBehaviour
 		HandleContacts();
 		Depenetrate();
 		SetState();
+		CalculateAcceleration();
+
+		_lastVelocity = Velocity;
 	}
 
 	public void Rotate(Quaternion rotation)
@@ -239,5 +245,11 @@ public class KinematicBody : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	private void CalculateAcceleration()
+    {
+		var acc = (Velocity - _lastVelocity) / Time.fixedDeltaTime;
+		Acceleration = Vector3.Lerp(Acceleration, acc, Time.deltaTime * smoothAcceleration);
 	}
 }

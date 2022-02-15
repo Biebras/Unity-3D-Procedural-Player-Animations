@@ -5,8 +5,6 @@ public class KinematicPlayer : MonoBehaviour
 {
     [Header("Walk")]
 	[SerializeField] private float speed = 12.0f;
-    [SerializeField] private float acceleration = 30;
-    [SerializeField] private float deceleration = 90;
 
     [Header("Falling")]
     [SerializeField] private float gravity = 35.0f;
@@ -32,7 +30,7 @@ public class KinematicPlayer : MonoBehaviour
         //  jump against a ceiling and don't fall since your motion 
         //  still being applied against its direction.
         _moveDirection = _kinematicBody.Velocity;
-
+        //print(_kinematicBody.Acceleration);
         Walk();
 
         SnapForce();

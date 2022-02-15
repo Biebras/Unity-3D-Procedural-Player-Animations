@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class PlayerVisualization : MonoBehaviour
 {
-    [SerializeField] private Transform playerGFX;
+    [SerializeField] private Transform _playerGFX;
+
+    [Header("Player Rotation")]
     [SerializeField] private float _rotationSpeed;
-    [SerializeField] private float _rotationOffset = 90;
+    [SerializeField] private float _rotationOffset = -90;
+
+    [Header("Player Tilt")]
+    [SerializeField] private float _maxTilt = 30;
+    [SerializeField] private float _tiltSpeed= 10;
 
     private Transform _transform;
     private KinematicBody _kinematicBody;
@@ -22,6 +28,7 @@ public class PlayerVisualization : MonoBehaviour
     private void Update()
     {
         HandleRotation();
+        TiltToAcceleration();
     }
 
     //Roatates player towards velocity when moving x and z axis
@@ -39,8 +46,20 @@ public class PlayerVisualization : MonoBehaviour
         _transform.eulerAngles = Vector3.up * lerp;
     }
 
-    private void HandlePlayerTilt()
+    void TiltToAcceleration()
     {
-        playerGFX.position = playerGFX.position;
+        var acceleration = _kinematicBody.Acceleration;
+        Vector3 tilt = CalculateTilt(acceleration);
+        Quaternion targetRotation = Quaternion.Euler(tilt);
+        _playerGFX.transform.rotation = Quaternion.Lerp(_playerGFX.transform.rotation, targetRotation, _tiltSpeed * Time.deltaTime);
+    }
+
+    Vector3 CalculateTilt(Vector3 acceleration)
+    {
+        acceleration.y = 0;
+        Vector3 tiltAxis = Vector3.Cross(acceleration, Vector3.up);
+        float angle = Mathf.Clamp(-acceleration.magnitude, -_maxTilt, _maxTilt);
+        Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
+        return targetRotation.eulerAngles;
     }
 }
