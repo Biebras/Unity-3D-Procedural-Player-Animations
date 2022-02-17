@@ -37,7 +37,7 @@ public class PlayerVisualization : MonoBehaviour
         var velocity = _kinematicBody.Velocity.normalized;
         var input = _playerInput.GetMovementInput();
 
-        if (input.magnitude == 0)
+        if (velocity.magnitude == 0 || input.magnitude == 0)
             return;
 
         var curAngle = _transform.eulerAngles.y;
