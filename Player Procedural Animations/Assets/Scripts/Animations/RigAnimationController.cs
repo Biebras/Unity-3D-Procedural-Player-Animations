@@ -31,6 +31,12 @@ public class RigAnimationController : MonoBehaviour
     public void PlayAnimation(string name)
     {
         var animation = GetAnimation(name);
+
+        for (int i = 0; i < animation.Keyframes[0].RigPosition.Count; i++)
+        {
+            RigTransforms[i].position = animation.Keyframes[0].RigPosition[i];
+        }
+
     }
 
     public RigAnimation GetAnimation(string name)
