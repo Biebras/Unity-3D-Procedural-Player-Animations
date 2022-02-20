@@ -15,11 +15,13 @@ public class RigAnimation
         return _currentKeyframe;
     }
 
-    public void IncramentKeyframe()
+    public int IncramentKeyframe()
     {
         _currentKeyframe++;
 
         if (_currentKeyframe >= Keyframes.Count)
             _currentKeyframe = 0;
+
+        return _currentKeyframe;
     }
 }

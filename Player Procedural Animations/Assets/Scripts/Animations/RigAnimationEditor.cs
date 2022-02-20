@@ -22,12 +22,17 @@ public class RigAnimationEditor : Editor
 
         if(GUILayout.Button("Add Rig Positions"))
         {
-            SetKeyframe(rigAnimation.EditorAnimationName, rigAnimation.EditorAnimationKeyframe, rigAnimation.RigTransforms);
+            SetKeyframes(rigAnimation.EditorAnimationName, rigAnimation.EditorAnimationKeyframe, rigAnimation.RigTransforms);
             rigAnimation.EditorAnimationKeyframe++;
+        }
+
+        if(GUILayout.Button("Change Key Frame"))
+        {
+            ChangeKeyframe(rigAnimation.EditorAnimationName, rigAnimation.EditorAnimationKeyframe, rigAnimation.RigTransforms);
         }
     }
 
-    private void SetKeyframe(string name, int keyframeIndex, List<Transform> rigTransform)
+    private void SetKeyframes(string name, int keyframeIndex, List<Transform> rigTransform)
     {
         RigAnimationController rigAnimation = (RigAnimationController)target;
 
@@ -40,15 +45,36 @@ public class RigAnimationEditor : Editor
 
         var keyframe = animation.Keyframes[keyframeIndex];
 
-        keyframe.RigPosition = new List<Vector3>();
+        keyframe.RigPosition = new List<RigTransform>();
 
         if(keyframe.RigPosition.Count != 0)
             keyframe.RigPosition.Clear();
 
 
         foreach (var rig in rigTransform)
-        { 
-            keyframe.RigPosition.Add(rig.position);
+        {
+            var position = rig.localPosition;
+            var rotation = rig.localEulerAngles;
+            var transform = new RigTransform(position, rotation);
+
+            keyframe.RigPosition.Add(transform);
+        }
+    }
+
+    private void ChangeKeyframe(string name, int keyframeIndex, List<Transform> rigTransform)
+    {
+        RigAnimationController rigAnimation = (RigAnimationController)target;
+
+        if (rigAnimation == null || rigTransform.Count == 0)
+            return;
+
+        var animation = rigAnimation.GetAnimation(name);
+        var rigPos = animation.Keyframes[keyframeIndex].RigPosition;
+
+        for (int i = 0; i < rigPos.Count; i++)
+        {
+            rigTransform[i].localPosition = rigPos[i].Position;
+            rigTransform[i].localEulerAngles = rigPos[i].Rotation;
         }
     }
 }

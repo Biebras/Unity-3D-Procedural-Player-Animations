@@ -34,7 +34,8 @@ public class RigAnimationController : MonoBehaviour
 
         for (int i = 0; i < animation.Keyframes[0].RigPosition.Count; i++)
         {
-            RigTransforms[i].position = animation.Keyframes[0].RigPosition[i];
+            RigTransforms[i].position = animation.Keyframes[0].RigPosition[i].Position;
+            RigTransforms[i].eulerAngles = animation.Keyframes[0].RigPosition[i].Rotation;
         }
 
     }
@@ -47,5 +48,12 @@ public class RigAnimationController : MonoBehaviour
             throw new Exception($"Couldn't find animation with the name: {name}");
 
         return animation;
+    }
+
+    public Keyframe IncramentKeyframe(string name)
+    {
+        var animation = GetAnimation(name);
+        var nextIndex = animation.IncramentKeyframe();
+        return animation.Keyframes[nextIndex];
     }
 }

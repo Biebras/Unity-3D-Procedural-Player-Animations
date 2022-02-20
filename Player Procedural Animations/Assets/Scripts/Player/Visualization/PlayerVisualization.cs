@@ -14,15 +14,19 @@ public class PlayerVisualization : MonoBehaviour
     [SerializeField] private float _maxTilt = 30;
     [SerializeField] private float _tiltSpeed= 10;
 
+    private string _currentAnimation;
+
     private Transform _transform;
     private KinematicBody _kinematicBody;
     private PlayerInput _playerInput;
+    private RigAnimationController _rigAnimation;
 
     private void Awake()
     {
         _transform = transform;
         _kinematicBody = GetComponent<KinematicBody>();
         _playerInput = GetComponent<PlayerInput>();
+        _rigAnimation = GetComponent<RigAnimationController>();
     }
 
     private void Update()
@@ -31,7 +35,12 @@ public class PlayerVisualization : MonoBehaviour
         TiltToAcceleration();
     }
 
-    //Roatates player towards velocity when moving x and z axis
+    private void WalkAnimation()
+    {
+        if (_kinematicBody.Velocity.magnitude != 0)
+            _currentAnimation = "Run";
+    }
+
     private void HandleRotation()
     {
         var velocity = _kinematicBody.Velocity.normalized;
