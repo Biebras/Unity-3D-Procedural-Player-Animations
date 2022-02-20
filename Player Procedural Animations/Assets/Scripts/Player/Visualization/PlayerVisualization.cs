@@ -1,10 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class PlayerVisualization : MonoBehaviour
 {
     [SerializeField] private Transform _playerGFX;
+
+    [Header("Player Walk Animation")]
+    [SerializeField] public float _stepRadius = 0.5f;
+    [SerializeField] public float _stepAngle;
 
     [Header("Player Rotation")]
     [SerializeField] private float _rotationSpeed;
@@ -14,7 +21,7 @@ public class PlayerVisualization : MonoBehaviour
     [SerializeField] private float _maxTilt = 30;
     [SerializeField] private float _tiltSpeed= 10;
 
-    private string _currentAnimation;
+    private int _nextStepAngle;
 
     private Transform _transform;
     private KinematicBody _kinematicBody;
@@ -31,14 +38,34 @@ public class PlayerVisualization : MonoBehaviour
 
     private void Update()
     {
+        WalkAnimation();
         HandleRotation();
         TiltToAcceleration();
     }
 
     private void WalkAnimation()
     {
-        if (_kinematicBody.Velocity.magnitude != 0)
-            _currentAnimation = "Run";
+        var vel = _kinematicBody.Velocity;
+        vel.y = 0;
+        _stepRadius = vel.magnitude / 20;
+        IncramentStepAngle(vel.magnitude * 20 * Time.deltaTime);
+
+        if (_nextStepAngle / 90 != (int)_stepAngle / 90)
+            return;
+
+        _rigAnimation.PlayAnimation("Run");
+        _nextStepAngle += 90;
+
+        if (_nextStepAngle >= 360)
+            _nextStepAngle -= 360;
+    }
+
+    private void IncramentStepAngle(float amount)
+    {
+        _stepAngle += amount;
+
+        if (_stepAngle > 360)
+            _stepAngle -= 360;
     }
 
     private void HandleRotation()
@@ -71,4 +98,35 @@ public class PlayerVisualization : MonoBehaviour
         Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
         return targetRotation.eulerAngles;
     }
+
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.white;
+        DrawCircle(_stepRadius, _stepAngle);
+    }
+
+#if UNITY_EDITOR
+    private void DrawCircle(float radius, float angle)
+    {
+        if (_transform == null)
+            _transform = transform;
+        
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(_transform.position, _transform.right, radius);
+        DrawLine(radius, angle);
+        DrawLine(radius, angle + 90);
+    }
+
+    private void DrawLine(float radius, float angle)
+    {
+        var startAngle = Mathf.Atan2(Vector3.forward.z, Vector3.forward.y) * Mathf.Rad2Deg;
+        var newAngle = (startAngle + angle) * Mathf.Deg2Rad;
+        var dir = new Vector3(0, Mathf.Cos(newAngle), Mathf.Sin(newAngle)).normalized;
+        var worldDir = _transform.TransformDirection(dir);
+
+        var pos1 = _transform.position + worldDir * radius;
+        var pos2 = _transform.position - worldDir * radius;
+        Handles.DrawLine(pos1, pos2);
+    }
+#endif
 }

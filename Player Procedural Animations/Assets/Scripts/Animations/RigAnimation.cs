@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class RigAnimation
 {
     public string Name;
     public List<Keyframe> Keyframes;
+    public AnimationCurve Ease;
 
     private int _currentKeyframe;
 

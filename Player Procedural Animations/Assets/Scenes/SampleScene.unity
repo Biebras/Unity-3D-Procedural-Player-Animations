@@ -1209,7 +1209,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 489732508}
-  m_LocalRotation: {x: 0.122178845, y: 1e-45, z: -0, w: 0.9925081}
+  m_LocalRotation: {x: 0.122178845, y: -1e-45, z: -0, w: 0.9925081}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1929,7 +1929,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.122178875, y: 3.0894262e-10, z: 3.8030565e-11, w: 0.9925081}
+  m_LocalRotation: {x: 0.122178875, y: -3.0894262e-10, z: -3.8030565e-11, w: 0.9925081}
   m_LocalPosition: {x: -3.117, y: 2.5, z: -5.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -2433,7 +2433,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1170335300}
-  m_LocalRotation: {x: 0.10415319, y: -0, z: -0, w: 0.9945613}
+  m_LocalRotation: {x: 0.10415319, y: -1e-45, z: -0, w: 0.9945613}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3198,7 +3198,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411425946}
-  m_LocalRotation: {x: 0.14021185, y: -0, z: -0, w: 0.99012154}
+  m_LocalRotation: {x: 0.14021185, y: 1e-45, z: -0, w: 0.99012154}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4422,8 +4422,6 @@ GameObject:
   - component: {fileID: 919132147499855182}
   - component: {fileID: 919132147499855179}
   - component: {fileID: 919132147499855180}
-  - component: {fileID: 919132147499855185}
-  - component: {fileID: 919132147499855184}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4490,6 +4488,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerGFX: {fileID: 914312666}
+  _stepRadius: 0.5
+  _stepAngle: 0
   _rotationSpeed: 8
   _rotationOffset: -90
   _maxTilt: 15
@@ -4515,23 +4515,6 @@ MonoBehaviour:
   - {fileID: 499437609}
   - {fileID: 1444015682}
   _animations:
-  - Name: T Pose
-    Keyframes:
-    - RigPosition:
-      - Position: {x: 0.5167887, y: 1.0636042, z: -0.0051862}
-        Rotation: {x: 87.437996, y: 86.362465, z: 355.9572}
-      - Position: {x: -0.5167887, y: 1.0636042, z: -0.005632758}
-        Rotation: {x: 87.35462, y: 270.65796, z: 0.8450327}
-      - Position: {x: 0.08326173, y: 0.078081965, z: 0.0071539283}
-        Rotation: {x: 303.65714, y: 0.006590336, z: 180.38509}
-      - Position: {x: -0.08326171, y: 0.07808192, z: 0.0052839373}
-        Rotation: {x: 303.15778, y: 0.0059901243, z: 179.60957}
-      - Position: {x: 0, y: 1.1775004, z: -0.016514957}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: 0, y: 1.263, z: 0.422}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: 0, y: 0.6974902, z: -0.0039417744}
-        Rotation: {x: -0, y: 0, z: 0}
   - Name: Run
     Keyframes:
     - RigPosition:
@@ -4594,157 +4577,56 @@ MonoBehaviour:
         Rotation: {x: -0, y: 0, z: 0}
       - Position: {x: 0, y: 0.59, z: -0.026}
         Rotation: {x: -0, y: 0, z: 0}
+    Ease:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  - Name: T Pose
+    Keyframes:
+    - RigPosition:
+      - Position: {x: 0.5167887, y: 1.0636042, z: -0.0051862}
+        Rotation: {x: 87.437996, y: 86.362465, z: 355.9572}
+      - Position: {x: -0.5167887, y: 1.0636042, z: -0.005632758}
+        Rotation: {x: 87.35462, y: 270.65796, z: 0.8450327}
+      - Position: {x: 0.08326173, y: 0.078081965, z: 0.0071539283}
+        Rotation: {x: 303.65714, y: 0.006590336, z: 180.38509}
+      - Position: {x: -0.08326171, y: 0.07808192, z: 0.0052839373}
+        Rotation: {x: 303.15778, y: 0.0059901243, z: 179.60957}
+      - Position: {x: 0, y: 1.1775004, z: -0.016514957}
+        Rotation: {x: -0, y: 0, z: 0}
+      - Position: {x: 0, y: 1.263, z: 0.422}
+        Rotation: {x: -0, y: 0, z: 0}
+      - Position: {x: 0, y: 0.6974902, z: -0.0039417744}
+        Rotation: {x: -0, y: 0, z: 0}
+    Ease:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   _playOnStart: 0
   EditorAnimationName: Run
   EditorAnimationKeyframe: 4
---- !u!114 &919132147499855184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132147499855178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00bbe140e4d034058b8412e0e36283ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RigTransforms:
-  - {fileID: 595567648}
-  - {fileID: 1940246751}
-  - {fileID: 981185375}
-  - {fileID: 1364753094}
-  - {fileID: 1539189055}
-  - {fileID: 499437609}
-  - {fileID: 1444015682}
-  _animations:
-  - Name: T Pose
-    Keyframes:
-    - RigPosition:
-      - Position: {x: -2.6002114, y: 1.0636042, z: -0.6051862}
-        Rotation: {x: 87.43784, y: 86.36247, z: 355.95718}
-      - Position: {x: -3.6337888, y: 1.0636042, z: -0.6056328}
-        Rotation: {x: 87.35462, y: 270.65796, z: 0.84504735}
-      - Position: {x: -3.0337384, y: 0.078081965, z: -0.5928461}
-        Rotation: {x: 303.65717, y: 0.006590355, z: 180.38509}
-      - Position: {x: -3.2002618, y: 0.078081906, z: -0.5947161}
-        Rotation: {x: 303.15778, y: 0.005973684, z: 179.60957}
-      - Position: {x: -3.117, y: 1.1775004, z: -0.616515}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 1.263, z: -0.17800003}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.6974902, z: -0.6039418}
-        Rotation: {x: -0, y: 0, z: 0}
-  - Name: Run
-    Keyframes:
-    - RigPosition:
-      - Position: {x: -2.8990002, y: 0.6919998, z: -0.616}
-        Rotation: {x: 349.31766, y: 271.81586, z: 209.2228}
-      - Position: {x: -3.367, y: 0.70699984, z: -0.65000004}
-        Rotation: {x: 9.828276, y: 89.989716, z: 180.62434}
-      - Position: {x: -3.141, y: 0.25199986, z: -0.77400005}
-        Rotation: {x: 303.65714, y: 20.326485, z: 180.38509}
-      - Position: {x: -3.2310002, y: 0.32499984, z: -0.72999996}
-        Rotation: {x: 357.2634, y: 0.2784091, z: 173.87137}
-      - Position: {x: -3.117, y: 0.8439998, z: -0.27100003}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.65099984, z: 0.41199994}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.55399984, z: -0.6039418}
-        Rotation: {x: -0, y: 0, z: 0}
-    - RigPosition:
-      - Position: {x: -2.8990002, y: 0.69199973, z: -0.616}
-        Rotation: {x: 349.31766, y: 271.81586, z: 209.2228}
-      - Position: {x: -3.367, y: 0.7069998, z: -0.65000004}
-        Rotation: {x: 9.828278, y: 89.98972, z: 180.62434}
-      - Position: {x: -3.117, y: 0.29999983, z: -1.019}
-        Rotation: {x: 24.996162, y: 0.33824658, z: 173.43942}
-      - Position: {x: -3.1740003, y: 0.28899977, z: -0.35499996}
-        Rotation: {x: 314.49896, y: 0.39676613, z: 173.60167}
-      - Position: {x: -3.117, y: 0.8929998, z: -0.29700002}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.7779998, z: 0.41199994}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.5619998, z: -0.6039418}
-        Rotation: {x: -0, y: 0, z: 0}
-    - RigPosition: []
-  _playOnStart: 0
-  EditorAnimationName: Run
-  EditorAnimationKeyframe: 3
---- !u!114 &919132147499855185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132147499855178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00bbe140e4d034058b8412e0e36283ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RigTransforms:
-  - {fileID: 595567648}
-  - {fileID: 1940246751}
-  - {fileID: 981185375}
-  - {fileID: 1364753094}
-  - {fileID: 1539189055}
-  - {fileID: 499437609}
-  - {fileID: 1444015682}
-  _animations:
-  - Name: T Pose
-    Keyframes:
-    - RigPosition:
-      - Position: {x: -2.6002114, y: 1.0636042, z: -0.6051862}
-        Rotation: {x: 87.43784, y: 86.36247, z: 355.95718}
-      - Position: {x: -3.6337888, y: 1.0636042, z: -0.6056328}
-        Rotation: {x: 87.35462, y: 270.65796, z: 0.84504735}
-      - Position: {x: -3.0337384, y: 0.078081965, z: -0.5928461}
-        Rotation: {x: 303.65717, y: 0.006590355, z: 180.38509}
-      - Position: {x: -3.2002618, y: 0.078081906, z: -0.5947161}
-        Rotation: {x: 303.15778, y: 0.005973684, z: 179.60957}
-      - Position: {x: -3.117, y: 1.1775004, z: -0.616515}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 1.263, z: -0.17800003}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.6974902, z: -0.6039418}
-        Rotation: {x: -0, y: 0, z: 0}
-  - Name: Run
-    Keyframes:
-    - RigPosition:
-      - Position: {x: -2.8990002, y: 0.6919998, z: -0.616}
-        Rotation: {x: 349.31766, y: 271.81586, z: 209.2228}
-      - Position: {x: -3.367, y: 0.70699984, z: -0.65000004}
-        Rotation: {x: 9.828276, y: 89.989716, z: 180.62434}
-      - Position: {x: -3.141, y: 0.25199986, z: -0.77400005}
-        Rotation: {x: 303.65714, y: 20.326485, z: 180.38509}
-      - Position: {x: -3.2310002, y: 0.32499984, z: -0.72999996}
-        Rotation: {x: 357.2634, y: 0.2784091, z: 173.87137}
-      - Position: {x: -3.117, y: 0.8439998, z: -0.27100003}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.65099984, z: 0.41199994}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.55399984, z: -0.6039418}
-        Rotation: {x: -0, y: 0, z: 0}
-    - RigPosition:
-      - Position: {x: -2.8990002, y: 0.69199973, z: -0.616}
-        Rotation: {x: 349.31766, y: 271.81586, z: 209.2228}
-      - Position: {x: -3.367, y: 0.7069998, z: -0.65000004}
-        Rotation: {x: 9.828278, y: 89.98972, z: 180.62434}
-      - Position: {x: -3.117, y: 0.29999983, z: -1.019}
-        Rotation: {x: 24.996162, y: 0.33824658, z: 173.43942}
-      - Position: {x: -3.1740003, y: 0.28899977, z: -0.35499996}
-        Rotation: {x: 314.49896, y: 0.39676613, z: 173.60167}
-      - Position: {x: -3.117, y: 0.8929998, z: -0.29700002}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.7779998, z: 0.41199994}
-        Rotation: {x: -0, y: 0, z: 0}
-      - Position: {x: -3.117, y: 0.5619998, z: -0.6039418}
-        Rotation: {x: -0, y: 0, z: 0}
-    - RigPosition: []
-  _playOnStart: 0
-  EditorAnimationName: Run
-  EditorAnimationKeyframe: 3
 --- !u!4 &1031632035801288109
 Transform:
   m_ObjectHideFlags: 0
