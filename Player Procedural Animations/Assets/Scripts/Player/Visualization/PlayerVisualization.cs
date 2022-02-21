@@ -16,6 +16,7 @@ public class PlayerVisualization : MonoBehaviour
     [Header("Player Rotation")]
     [SerializeField] private float _rotationSpeed;
     [SerializeField] private float _rotationOffset = -90;
+    [SerializeField] private Vector3 wheelOffset;
 
     [Header("Player Tilt")]
     [SerializeField] private float _maxTilt = 30;
@@ -47,14 +48,14 @@ public class PlayerVisualization : MonoBehaviour
     {
         var vel = _kinematicBody.Velocity;
         vel.y = 0;
-        _stepRadius = vel.magnitude / 20;
-        IncramentStepAngle(vel.magnitude * 20 * Time.deltaTime);
+        _stepRadius = vel.magnitude / 40;
+        IncramentStepAngle(vel.magnitude * 40 * Time.deltaTime);
 
-        if (_nextStepAngle / 90 != (int)_stepAngle / 90)
+        if (_nextStepAngle / 45 != (int)_stepAngle / 45)
             return;
 
         _rigAnimation.PlayAnimation("Run");
-        _nextStepAngle += 90;
+        _nextStepAngle += 45;
 
         if (_nextStepAngle >= 360)
             _nextStepAngle -= 360;
@@ -112,7 +113,7 @@ public class PlayerVisualization : MonoBehaviour
             _transform = transform;
         
         Handles.color = Color.white;
-        Handles.DrawWireDisc(_transform.position, _transform.right, radius);
+        Handles.DrawWireDisc(_transform.position + wheelOffset, _transform.right, radius);
         DrawLine(radius, angle);
         DrawLine(radius, angle + 90);
     }
@@ -124,8 +125,8 @@ public class PlayerVisualization : MonoBehaviour
         var dir = new Vector3(0, Mathf.Cos(newAngle), Mathf.Sin(newAngle)).normalized;
         var worldDir = _transform.TransformDirection(dir);
 
-        var pos1 = _transform.position + worldDir * radius;
-        var pos2 = _transform.position - worldDir * radius;
+        var pos1 = _transform.position + wheelOffset + worldDir * radius;
+        var pos2 = _transform.position + wheelOffset - worldDir * radius;
         Handles.DrawLine(pos1, pos2);
     }
 #endif
