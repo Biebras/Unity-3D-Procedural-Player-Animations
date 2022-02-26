@@ -1806,8 +1806,8 @@ MonoBehaviour:
         transform: {fileID: 0}
         weight: 0
     m_Offset: {x: 0, y: 0, z: 0}
-    m_MinLimit: -70
-    m_MaxLimit: 70
+    m_MinLimit: -130
+    m_MaxLimit: 130
     m_AimAxis: 4
     m_UpAxis: 2
     m_WorldUpType: 0
@@ -1816,8 +1816,8 @@ MonoBehaviour:
     m_MaintainOffset: 0
     m_ConstrainedAxes:
       x: 1
-      y: 1
-      z: 1
+      y: 0
+      z: 0
   m_SourceObjectsGUIToggle: 1
   m_SettingsGUIToggle: 1
 --- !u!1 &914312665
@@ -4462,7 +4462,7 @@ MonoBehaviour:
   _center: {x: 0, y: 1.08, z: 0}
   _radius: 0.35
   _height: 2
-  smoothAcceleration: 3
+  smoothAcceleration: 6
 --- !u!114 &919132147499855181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4492,6 +4492,7 @@ MonoBehaviour:
   _stepAngle: 0
   _rotationSpeed: 8
   _rotationOffset: -90
+  wheelOffset: {x: 0, y: 0.4, z: 0}
   _maxTilt: 15
   _tiltSpeed: 10
 --- !u!114 &919132147499855183
